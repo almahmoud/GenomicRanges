@@ -37,6 +37,9 @@ jobs:
       with:
         bioc-version: 3.19
 
+    - uses: r-lib/actions/setup-pandoc@v2
+    - uses: r-lib/actions/setup-tinytex@v2
+
     - name: Generate download URL
       id: get_url
       run: |
