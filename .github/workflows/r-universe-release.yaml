@@ -58,14 +58,14 @@ jobs:
     - name: Download package
       run: |
         if [[ -n "${{ matrix.config.fallback_url_template }}" ]]; then
-          if curl --output /dev/null --silent --head --fail "${{ steps.get_url.outputs.download_url }}"; then
-            curl -O "${{ steps.get_url.outputs.download_url }}"
+          if curl -L --output /dev/null --silent --head --fail "${{ steps.get_url.outputs.download_url }}"; then
+            curl -L -O "${{ steps.get_url.outputs.download_url }}"
           else
             echo "binary ${{ steps.get_url.outputs.download_url }} not found, using fallback ${{ steps.get_url.outputs.fallback_url }} instead"
-            curl -O "${{ steps.get_url.outputs.fallback_url }}"
+            curl -L -O "${{ steps.get_url.outputs.fallback_url }}"
           fi
         else
-          curl -O "${{ steps.get_url.outputs.download_url }}"
+          curl -L -O "${{ steps.get_url.outputs.download_url }}"
         fi
       shell: bash
 
