@@ -11,6 +11,7 @@ on:
 jobs:
   test-and-release:
     strategy:
+      fail-fast: false
       matrix:
         config:
           - {os: windows-latest, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/windows/contrib/{r_version}/{package_name}_{package_version}.zip'}
@@ -75,7 +76,7 @@ jobs:
 
     - name: Run vignettes
       run: |
-        install.packages("devtools"); devtools::build_vignettes(package = "${{ steps.pkg_info.outputs.pkg_name }}")
+        install.packages("devtools"); devtools::build_vignettes(pkg = "${{ steps.pkg_info.outputs.pkg_name }}")
       shell: Rscript {0}
 
     - name: Check if release exists
