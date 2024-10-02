@@ -14,7 +14,7 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/windows/contrib/{r_version}/{package_name}_{package_version}.zip'}
-          - {os: macos-latest-large, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
+          # - {os: macos-latest-large, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
           - {os: macos-latest, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-arm64/contrib/{r_version}/{package_name}_{package_version}.tgz', fallback_url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
           - {os: ubuntu-latest, r: '${{ github.event.inputs.r-version }}', container: 'ghcr.io/bioconductor/bioconductor:devel', url_template: 'https://bioc.r-universe.dev/src/contrib/{package_name}_{package_version}.tar.gz'}
 
