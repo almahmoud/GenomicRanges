@@ -56,25 +56,29 @@ jobs:
       shell: bash
 
     - name: Download package
+      id: downloadpkg
       run: |
+        mkdir -p /tmp/pkg
         if [[ -n "${{ matrix.config.fallback_url_template }}" ]]; then
           if curl -L --output /dev/null --silent --head --fail "${{ steps.get_url.outputs.download_url }}"; then
             curl -L -O "${{ steps.get_url.outputs.download_url }}"
+            echo "tarname=$(basename ${{ steps.get_url.outputs.download_url }})" >> $GITHUB_OUTPUT
           else
             echo "binary ${{ steps.get_url.outputs.download_url }} not found, using fallback ${{ steps.get_url.outputs.fallback_url }} instead"
             curl -L -O "${{ steps.get_url.outputs.fallback_url }}"
+            echo "tarname=$(basename ${{ steps.get_url.outputs.fallback_url }})" >> $GITHUB_OUTPUT
           fi
         else
           curl -L -O "${{ steps.get_url.outputs.download_url }}"
+          echo "tarname=$(basename ${{ steps.get_url.outputs.download_url }})" >> $GITHUB_OUTPUT
         fi
       shell: bash
 
     - name: Install package
       run: |
-        if (!require("BiocManager", quietly = TRUE))
-          install.packages("BiocManager")
-        BiocManager::install(version = "3.19")
-        install.packages(list.files(pattern="${{ steps.pkg_info.outputs.pkg_name }}.*\\.(tar\\.gz|tgz|zip)$"), repos=NULL, type="source")
+        d <- tempdir()
+        untar("${{ steps.downloadpkg.outputs.tarname }}", exdir=d)
+        devtools::install(file.path(d, "${{ steps.pkg_info.outputs.pkg_name }}"), dependencies=TRUE, repos=BiocManager::repositories())
       shell: Rscript {0}
 
     - name: Run vignettes
