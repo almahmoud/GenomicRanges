@@ -76,7 +76,7 @@ jobs:
 
     - name: Run vignettes
       run: |
-        install.packages("devtools"); devtools::build_vignettes(pkg = "${{ steps.pkg_info.outputs.pkg_name }}")
+        install.packages("devtools"); devtools::build_vignettes(pkg = ".")
       shell: Rscript {0}
 
     - name: Check if release exists
