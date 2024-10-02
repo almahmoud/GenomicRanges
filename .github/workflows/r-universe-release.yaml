@@ -43,6 +43,7 @@ jobs:
     - name: Generate download URL
       id: get_url
       run: |
+        sudo apt-get install texlive-fonts-extra
         url="${{ matrix.config.url_template }}"
         url="${url/\{r_version\}/${{ matrix.config.r }}}"
         url="${url/\{package_name\}/${{ steps.pkg_info.outputs.pkg_name }}}"
