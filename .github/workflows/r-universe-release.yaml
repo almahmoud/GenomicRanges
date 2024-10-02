@@ -79,7 +79,15 @@ jobs:
         install.packages(c("devtools", "remotes"))
         d <- tempdir()
         untar("${{ steps.downloadpkg.outputs.tarname }}", exdir=d)
-        devtools::install(file.path(d, "${{ steps.pkg_info.outputs.pkg_name }}"), dependencies=TRUE, repos=BiocManager::repositories())
+        description_file <- file.path(d, "${{ steps.pkg_info.outputs.pkg_name }}", "DESCRIPTION")
+        desc <- read.dcf(description_file)
+        depends <- unlist(strsplit(desc[1, "Depends"], ",\\s*"))
+        imports <- unlist(strsplit(desc[1, "Imports"], ",\\s*"))
+        suggests <- unlist(strsplit(desc[1, "Suggests"], ",\\s*"))
+        all_dependencies <- unique(c(depends, imports, suggests))
+        all_dependencies <- all_dependencies[all_dependencies != ""]
+        install.packages(all_dependencies, repos=BiocManager::repositories())
+        install.packages("${{ steps.downloadpkg.outputs.tarname }}", repos=NULL, type="source")
       shell: Rscript {0}
 
     - name: Run vignettes
