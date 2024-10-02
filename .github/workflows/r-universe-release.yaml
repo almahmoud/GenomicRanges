@@ -76,6 +76,7 @@ jobs:
 
     - name: Install package
       run: |
+        install.packages(c("devtools", "remotes"))
         d <- tempdir()
         untar("${{ steps.downloadpkg.outputs.tarname }}", exdir=d)
         devtools::install(file.path(d, "${{ steps.pkg_info.outputs.pkg_name }}"), dependencies=TRUE, repos=BiocManager::repositories())
