@@ -154,6 +154,7 @@ jobs:
           --notes "Release for R version ${{ github.event.inputs.r-version }}"
 
         for asset in ./binaries/*/*; do
-          gh release upload v$version "$asset"
+          mv $asset "${asset%.*}-runiverse.${asset##*.}"
+          gh release upload v$version {asset%.*}-runiverse.${asset##*.}
         done
       shell: bash
