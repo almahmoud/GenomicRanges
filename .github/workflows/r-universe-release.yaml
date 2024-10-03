@@ -1,12 +1,11 @@
 name: Manual Package Test and Release
-
 on:
   workflow_dispatch:
     inputs:
-      r-version:
-        description: 'R version to use'
+      bioc-version:
+        description: 'Bioconductor version to use'
         required: true
-        default: '4.4'
+        default: '3.19'
 
 jobs:
   test-and-release:
@@ -14,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/windows/contrib/{r_version}/{package_name}_{package_version}.zip'}
-          - {os: macos-13, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
-          - {os: macos-latest, r: '${{ github.event.inputs.r-version }}', url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-arm64/contrib/{r_version}/{package_name}_{package_version}.tgz', fallback_url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
-          - {os: ubuntu-latest, r: '${{ github.event.inputs.r-version }}', container: 'ghcr.io/bioconductor/bioconductor:devel', url_template: 'https://bioc.r-universe.dev/src/contrib/{package_name}_{package_version}.tar.gz'}
+          - {os: windows-latest, url_template: 'https://bioc.r-universe.dev/bin/windows/contrib/{r_version}/{package_name}_{package_version}.zip'}
+          - {os: macos-13, url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
+          - {os: macos-latest, url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-arm64/contrib/{r_version}/{package_name}_{package_version}.tgz', fallback_url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
+          - {os: ubuntu-latest, container: 'ghcr.io/bioconductor/bioconductor:devel', url_template: 'https://bioc.r-universe.dev/src/contrib/{package_name}_{package_version}.tar.gz'}
 
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.container }}
@@ -29,17 +28,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set package name and version
+    - name: Set package name, version, and R version
       id: pkg_info
       run: |
         echo "pkg_name=${{ github.event.repository.name }}" >> $GITHUB_OUTPUT
         echo "pkg_version=$(grep "Version:" DESCRIPTION | awk '{print $2}')" >> $GITHUB_OUTPUT
+        RELEASE_R_VER=$(curl -s https://bioconductor.org/config.yaml | grep -A 100 "r_ver_for_bioc_ver:" | grep "3.19" | awk -F'"' '{print $4}' | head -n1)
+        echo "r_version=$RELEASE_R_VER" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Setup R and Bioconductor
       uses: grimbough/bioc-actions/setup-bioc@v1
       with:
-        bioc-version: 3.19
+        bioc-version: ${{ github.event.inputs.bioc-version }}
 
     - uses: r-lib/actions/setup-pandoc@v2
     - uses: r-lib/actions/setup-tinytex@v2
@@ -48,14 +49,14 @@ jobs:
       id: get_url
       run: |
         url="${{ matrix.config.url_template }}"
-        url="${url/\{r_version\}/${{ matrix.config.r }}}"
+        url="${url/\{r_version\}/${{ steps.pkg_info.outputs.r_version }}}"
         url="${url/\{package_name\}/${{ steps.pkg_info.outputs.pkg_name }}}"
         url="${url/\{package_version\}/${{ steps.pkg_info.outputs.pkg_version }}}"
         echo "download_url=$url" >> $GITHUB_OUTPUT
         
         if [[ -n "${{ matrix.config.fallback_url_template }}" ]]; then
           fallback_url="${{ matrix.config.fallback_url_template }}"
-          fallback_url="${fallback_url/\{r_version\}/${{ matrix.config.r }}}"
+          fallback_url="${fallback_url/\{r_version\}/${{ steps.pkg_info.outputs.r_version }}}"
           fallback_url="${fallback_url/\{package_name\}/${{ steps.pkg_info.outputs.pkg_name }}}"
           fallback_url="${fallback_url/\{package_version\}/${{ steps.pkg_info.outputs.pkg_version }}}"
           echo "fallback_url=$fallback_url" >> $GITHUB_OUTPUT
