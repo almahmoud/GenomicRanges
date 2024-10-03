@@ -1,82 +1,52 @@
-WARNING: ignoring environment value of R_HOME
-Installing package into ‘/__w/_temp/Library’
-(as ‘lib’ is unspecified)
-trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/latest/src/contrib/devtools_2.4.5.tar.gz'
-Content type 'binary/octet-stream' length 435688 bytes (425 KB)
-==================================================
-downloaded 425 KB
+Running 'texi2dvi' on 'ExtendingGenomicRanges.tex' failed.
+LaTeX errors:
+! LaTeX Error: File `beramono.sty' not found.
 
-* installing *binary* package ‘devtools’ ...
-* DONE (devtools)
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
 
-The downloaded source packages are in
-	‘/tmp/RtmpMgLztp/downloaded_packages’
-ℹ Installing GenomicRanges in temporary library
-ℹ Building vignettes for GenomicRanges
---- re-building ‘GenomicRangesIntroduction.Rmd’ using rmarkdown
+! Emergency stop.
+<read *> 
+         
+l.94 \RequirePackage
+                    [T1]{fontenc}^^M
+!  ==> Fatal error occurred, no output PDF file produced!
+Output:
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2024-06-01> patch level 2
+L3 programming layer <2024-09-10>
+(./ExtendingGenomicRanges.tex (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2024/02/08 v1.4n Standard LaTeX document class
+(/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/base/size10.clo)) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/natbib/natbib.sty) (/Users/runner/work/_temp/Library/BiocStyle/resources/tex/Bioconductor.sty
 
+LaTeX Warning: You have requested package `/Users/runner/work/_temp/Library/BiocStyle/resources/tex/Bioconductor',
+               but the package provides `Bioconductor'.
 
-processing file: GenomicRangesIntroduction.Rmd
-1/118                             
-2/118 [style]                     
-3/118                             
-4/118 [BiocManager]               
-5/118                             
-6/118 [initialize]                
-7/118                             
-8/118 [example-GRanges]           
-9/118                             
-10/118 [GRanges-location-accessors]
-11/118                             
-12/118 [granges-accessor]          
-13/118                             
-14/118 [metadataAccess]            
-15/118                             
-16/118 [setSeqLengths]             
-17/118                             
-18/118 [setSeqLengths2]            
-19/118                             
-    FileForFormat
+(/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty)) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty))) (/Users/runner/Library/TinyTeX/texmf-dist/tex/latex/geometry/geometry.sty (/Users/runner/Library/TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty))
 
-The following object is masked from ‘package:AnnotationHub’:
+! LaTeX Error: File `beramono.sty' not found.
 
-    hubUrl
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
 
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
 
-Attaching package: ‘KEGGgraph’
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
 
-The following object is masked from ‘package:graphics’:
-
-    plot
-
-The following object is masked from ‘package:base’:
-
-    plot
-
-trying URL 'https://rest.kegg.jp/get/hsa05210/kgml'
-downloaded 32 KB
-
-Warning in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
-  texi2dvi script/program not available, using emulation
-Error: Error: processing vignette 'GenomicRangesHOWTOs.Rnw' failed with diagnostics:
-pdflatex is not available
---- failed re-building ‘GenomicRangesHOWTOs.Rnw’
-
---- re-building ‘GRanges_and_GRangesList_slides.Rnw’ using Sweave
-Warning in .merge_two_Seqinfo_objects(x, y) :
-  The 2 combined objects have no sequence levels in common. (Use
-  suppressWarnings() to suppress this warning.)
-Warning in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
-  texi2dvi script/program not available, using emulation
-Error: Error: processing vignette 'GRanges_and_GRangesList_slides.Rnw' failed with diagnostics:
-pdflatex is not available
---- failed re-building ‘GRanges_and_GRangesList_slides.Rnw’
-
---- re-building ‘Ten_things_slides.Rnw’ using Sweave
-Warning in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
-  texi2dvi script/program not available, using emulation
-Error: Error: processing vignette 'Ten_things_slides.Rnw' failed with diagnostics:
-pdflatex is not available
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.7 ^^M
+       
+!  ==> Fatal error occurred, no output PDF file produced!
+Transcript written on Ten_things_slides.log.
 --- failed re-building ‘Ten_things_slides.Rnw’
 
 SUMMARY: processing the following files failed:
