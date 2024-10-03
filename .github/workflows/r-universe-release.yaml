@@ -98,10 +98,9 @@ jobs:
       shell: Rscript {0}
 
     - name: Run vignettes
-      continue-on-error: true
       run: |
         Rscript -e 'install.packages("devtools"); devtools::build_vignettes(pkg = ".")' 2>&1 > /tmp/vignlog
-        missing_packages=$(Rscript -e 'li <- tinytex::parse_packages("build_error.log"); cat(paste(shQuote(unlist(li)), collapse = ", "))')
+        missing_packages=$(Rscript -e 'li <- tinytex::parse_packages("/tmp/vignlog"); cat(paste(shQuote(unlist(li)), collapse = ", "))')
         if [ -n "$missing_packages" ]; then
           echo "Missing packages: $missing_packages"
           Rscript -e "tinytex::tlmgr_install(c($missing_packages))"
