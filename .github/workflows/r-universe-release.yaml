@@ -13,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, url_template: 'https://bioc.r-universe.dev/bin/windows/contrib/{r_version}/{package_name}_{package_version}.zip'}
-          - {os: macos-13, url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
-          - {os: macos-latest, url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-arm64/contrib/{r_version}/{package_name}_{package_version}.tgz', fallback_url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
-          - {os: ubuntu-latest, container: 'ghcr.io/bioconductor/bioconductor:devel', url_template: 'https://bioc.r-universe.dev/src/contrib/{package_name}_{package_version}.tar.gz'}
+          - {prefix: 'win', os: windows-latest, url_template: 'https://bioc.r-universe.dev/bin/windows/contrib/{r_version}/{package_name}_{package_version}.zip'}
+          - {prefix: 'mac', os: macos-13, url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
+          - {prefix: 'macarm', os: macos-latest, url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-arm64/contrib/{r_version}/{package_name}_{package_version}.tgz', fallback_url_template: 'https://bioc.r-universe.dev/bin/macosx/big-sur-x86_64/contrib/{r_version}/{package_name}_{package_version}.tgz'}
+          - {prefix: 'src', os: ubuntu-latest, container: 'ghcr.io/bioconductor/bioconductor:devel', url_template: 'https://bioc.r-universe.dev/src/contrib/{package_name}_{package_version}.tar.gz'}
 
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.container }}
@@ -109,13 +109,14 @@ jobs:
           echo "No missing LaTeX packages."
         fi
         Rscript -e 'devtools::build_vignettes(pkg = ".")'
+        mv "${{ steps.downloadpkg.outputs.tarname }}" "${{ matrix.config.prefix }}-${{ steps.downloadpkg.outputs.tarname }}"
       shell: bash
 
     - name: Upload binaries as artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.pkg_info.outputs.pkg_name }}-${{ matrix.config.os }}-binaries
-        path: ${{ steps.downloadpkg.outputs.tarname }}
+        path: "${{ matrix.config.prefix }}-${{ steps.downloadpkg.outputs.tarname }}"
 
   create-release:
     needs: test-and-release
@@ -155,7 +156,6 @@ jobs:
           --notes "Release for R version ${{ github.event.inputs.r-version }}"
 
         for asset in ./binaries/*/*; do
-          mv $asset "${asset%.*}-runiverse.${asset##*.}"
-          gh release upload v$version {asset%.*}-runiverse.${asset##*.}
+          gh release upload v$version "$asset"
         done
       shell: bash
