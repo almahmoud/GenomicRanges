@@ -43,7 +43,6 @@ jobs:
     - name: Generate download URL
       id: get_url
       run: |
-        sudo apt-get install texlive-fonts-extra
         url="${{ matrix.config.url_template }}"
         url="${url/\{r_version\}/${{ matrix.config.r }}}"
         url="${url/\{package_name\}/${{ steps.pkg_info.outputs.pkg_name }}}"
@@ -62,7 +61,6 @@ jobs:
     - name: Download package
       id: downloadpkg
       run: |
-        mkdir -p /tmp/pkg
         if [[ -n "${{ matrix.config.fallback_url_template }}" ]]; then
           if curl -L --output /dev/null --silent --head --fail "${{ steps.get_url.outputs.download_url }}"; then
             curl -L -O "${{ steps.get_url.outputs.download_url }}"
@@ -95,9 +93,21 @@ jobs:
       shell: Rscript {0}
 
     - name: Run vignettes
+      continue-on-error: true
       run: |
-        install.packages("devtools"); devtools::build_vignettes(pkg = ".")
-      shell: Rscript {0}
+        Rscript -e 'install.packages("devtools"); devtools::build_vignettes(pkg = ".")' 2>&1 > /tmp/vignlog
+      shell: bash
+
+    - name: Check for missing LaTeX packages
+      run: |
+        missing_packages=$(Rscript -e "tinytex::parse_packages('/tmp/vignlog')")
+        if [ -n "$missing_packages" ]; then
+          echo "Missing packages: $missing_packages"
+          Rscript -e "tinytex::tlmgr_install(c($missing_packages))"
+        else
+          echo "No missing LaTeX packages."
+        fi
+        Rscript -e 'devtools::build_vignettes(pkg = ".")'
 
     - name: Check if release exists
       id: check_release

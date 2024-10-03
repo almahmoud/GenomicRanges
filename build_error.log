@@ -1,0 +1,97 @@
+WARNING: ignoring environment value of R_HOME
+Installing package into ‘/__w/_temp/Library’
+(as ‘lib’ is unspecified)
+trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/latest/src/contrib/devtools_2.4.5.tar.gz'
+Content type 'binary/octet-stream' length 435688 bytes (425 KB)
+==================================================
+downloaded 425 KB
+
+* installing *binary* package ‘devtools’ ...
+* DONE (devtools)
+
+The downloaded source packages are in
+	‘/tmp/RtmpMgLztp/downloaded_packages’
+ℹ Installing GenomicRanges in temporary library
+ℹ Building vignettes for GenomicRanges
+--- re-building ‘GenomicRangesIntroduction.Rmd’ using rmarkdown
+
+
+processing file: GenomicRangesIntroduction.Rmd
+1/118                             
+2/118 [style]                     
+3/118                             
+4/118 [BiocManager]               
+5/118                             
+6/118 [initialize]                
+7/118                             
+8/118 [example-GRanges]           
+9/118                             
+10/118 [GRanges-location-accessors]
+11/118                             
+12/118 [granges-accessor]          
+13/118                             
+14/118 [metadataAccess]            
+15/118                             
+16/118 [setSeqLengths]             
+17/118                             
+18/118 [setSeqLengths2]            
+19/118                             
+    FileForFormat
+
+The following object is masked from ‘package:AnnotationHub’:
+
+    hubUrl
+
+
+Attaching package: ‘KEGGgraph’
+
+The following object is masked from ‘package:graphics’:
+
+    plot
+
+The following object is masked from ‘package:base’:
+
+    plot
+
+trying URL 'https://rest.kegg.jp/get/hsa05210/kgml'
+downloaded 32 KB
+
+Warning in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
+  texi2dvi script/program not available, using emulation
+Error: Error: processing vignette 'GenomicRangesHOWTOs.Rnw' failed with diagnostics:
+pdflatex is not available
+--- failed re-building ‘GenomicRangesHOWTOs.Rnw’
+
+--- re-building ‘GRanges_and_GRangesList_slides.Rnw’ using Sweave
+Warning in .merge_two_Seqinfo_objects(x, y) :
+  The 2 combined objects have no sequence levels in common. (Use
+  suppressWarnings() to suppress this warning.)
+Warning in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
+  texi2dvi script/program not available, using emulation
+Error: Error: processing vignette 'GRanges_and_GRangesList_slides.Rnw' failed with diagnostics:
+pdflatex is not available
+--- failed re-building ‘GRanges_and_GRangesList_slides.Rnw’
+
+--- re-building ‘Ten_things_slides.Rnw’ using Sweave
+Warning in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
+  texi2dvi script/program not available, using emulation
+Error: Error: processing vignette 'Ten_things_slides.Rnw' failed with diagnostics:
+pdflatex is not available
+--- failed re-building ‘Ten_things_slides.Rnw’
+
+SUMMARY: processing the following files failed:
+  ‘ExtendingGenomicRanges.Rnw’ ‘GenomicRangesHOWTOs.Rnw’
+  ‘GRanges_and_GRangesList_slides.Rnw’ ‘Ten_things_slides.Rnw’
+---
+Backtrace:
+1. devtools::build_vignettes(pkg = ".")
+2. callr::r(function(...) tools::buildVignettes(...), args = list(dir = pkg$p…
+3. callr:::get_result(output = out, options)
+4. callr:::throw(callr_remote_error(remerr, output), parent = fix_msg(remerr[[3]]))
+---
+Subprocess backtrace:
+1. tools::buildVignettes(...)
+2. base::stop(msg, domain = NA, call. = FALSE)
+3. | base::.handleSimpleError(function (e) …
+4. global h(simpleError(msg, call))
+Execution halted
