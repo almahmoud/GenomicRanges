@@ -69,16 +69,18 @@ jobs:
         if [[ -n "${{ matrix.config.fallback_url_template }}" ]]; then
           if curl -L --output /dev/null --silent --head --fail "${{ steps.get_url.outputs.download_url }}"; then
             curl -L -O "${{ steps.get_url.outputs.download_url }}"
-            echo "tarname=$(basename ${{ steps.get_url.outputs.download_url }})" >> $GITHUB_OUTPUT
+            tarname=$(basename ${{ steps.get_url.outputs.download_url }})
           else
             echo "binary ${{ steps.get_url.outputs.download_url }} not found, using fallback ${{ steps.get_url.outputs.fallback_url }} instead"
             curl -L -O "${{ steps.get_url.outputs.fallback_url }}"
-            echo "tarname=$(basename ${{ steps.get_url.outputs.fallback_url }})" >> $GITHUB_OUTPUT
+            tarname=$(basename ${{ steps.get_url.outputs.fallback_url }})
           fi
         else
           curl -L -O "${{ steps.get_url.outputs.download_url }}"
-          echo "tarname=$(basename ${{ steps.get_url.outputs.download_url }})" >> $GITHUB_OUTPUT
+          tarname=$(basename ${{ steps.get_url.outputs.download_url }})
         fi
+        mv "$tarname" "${{ matrix.config.prefix }}-$tarname"
+        echo "tarname=${{ matrix.config.prefix }}-$tarname" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Install package
@@ -95,27 +97,29 @@ jobs:
         all_dependencies <- all_dependencies[all_dependencies != ""]
         install.packages(all_dependencies, repos=BiocManager::repositories())
         install.packages("${{ steps.downloadpkg.outputs.tarname }}", repos=NULL, type="source")
+        install.packages("devtools")
       shell: Rscript {0}
 
-    - name: Run vignettes
-      run: |
-        Rscript -e 'install.packages("devtools"); devtools::build_vignettes(pkg = ".")' 2>&1 > /tmp/vignlog
-        missing_packages=$(Rscript -e 'li <- tinytex::parse_packages("/tmp/vignlog"); cat(paste(shQuote(unlist(li)), collapse = ", "))')
-        if [ -n "$missing_packages" ]; then
-          echo "Missing packages: $missing_packages"
-          Rscript -e "tinytex::tlmgr_install(c($missing_packages))"
-        else
-          echo "No missing LaTeX packages."
-        fi
-        Rscript -e 'devtools::build_vignettes(pkg = ".")'
-        mv "${{ steps.downloadpkg.outputs.tarname }}" "${{ matrix.config.prefix }}-${{ steps.downloadpkg.outputs.tarname }}"
-      shell: bash
+    - uses: nick-fields/retry@v3
+      with:
+        shell: bash
+        max_attempts: 10
+        timeout_minutes: 120
+        command: |
+          ( Rscript -e 'devtools::build_vignettes(pkg = ".")' 2>&1 | tee vignlog ) || true
+          missing_packages=$(Rscript -e 'li <- tinytex::parse_packages("vignlog"); cat(paste(shQuote(unlist(li)), collapse = ", "))')
+          if [ -n "$missing_packages" ]; then
+            echo "Missing packages: $missing_packages"
+            Rscript -e "tinytex::tlmgr_install(c($missing_packages))"
+          else
+            echo "No missing LaTeX packages."
+          fi
 
     - name: Upload binaries as artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.pkg_info.outputs.pkg_name }}-${{ matrix.config.os }}-binaries
-        path: "${{ matrix.config.prefix }}-${{ steps.downloadpkg.outputs.tarname }}"
+        path: "${{ steps.downloadpkg.outputs.tarname }}"
 
   create-release:
     needs: test-and-release
