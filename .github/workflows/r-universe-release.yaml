@@ -107,7 +107,9 @@ jobs:
         timeout_minutes: 120
         command: |
           ( Rscript -e 'devtools::build_vignettes(pkg = ".")' 2>&1 | tee vignlog ) || true
-          missing_packages=$(Rscript -e 'li <- tinytex::parse_packages("vignlog"); cat(paste(shQuote(unlist(li)), collapse = ", "))')
+          Rscript -e 'li <- tinytex::parse_packages("vignlog"); writeLines(paste(shQuote(unlist(li)), collapse = ", "), "vigpkgs.txt")'
+          missing_packages=$(cat vigpkgs.txt)
+          rm vigpkgs.txt
           if [ -n "$missing_packages" ]; then
             echo "Missing packages: $missing_packages"
             Rscript -e "tinytex::tlmgr_install(c($missing_packages))"
